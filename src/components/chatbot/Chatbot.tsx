@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Chat } from "@/types/Chat"
-
+import Markdown from "react-markdown"
 
 export default function ChatBot() {
   const dummyChatList: Chat[] = [
@@ -83,13 +83,21 @@ export default function ChatBot() {
             {messages.map((message) =>
               message.user === "Robot" ? (
                 <div key={message.id} className="w-full flex flex-col items-end mb-2">
-                  <div className="rounded p-2">{message.message}</div>
+                  <div className="rounded p-2">
+                    <Markdown>
+                      {message.message}
+                    </Markdown>
+                  </div>
                   <span className="text-xs text-gray-400">{message.createdAt.toLocaleString()}</span>
                 </div>
               ) : (
                 <div key={message.id} className="w-full flex flex-col items-end mb-2">
                   <Label className="font-semibold">{message.user}</Label>
-                  <div className="rounded p-2 bg-gray-100">{message.message}</div>
+                  <div className="rounded p-2 bg-gray-100">
+                    <Markdown>
+                      {message.message}
+                    </Markdown>
+                  </div>
                   <span className="text-xs text-gray-400">{message.createdAt.toLocaleString()}</span>
                 </div>
               )
@@ -97,7 +105,11 @@ export default function ChatBot() {
             {chatOutput && (
               <div className="w-full flex flex-col items-end mb-2">
                 <Label className="font-semibold">Robot</Label>
-                <div className="rounded p-2 bg-gray-100">{chatOutput}</div>
+                <div className="rounded p-2 bg-gray-100">
+                  <Markdown>
+                    {chatOutput}
+                  </Markdown>
+                </div>
                 <span className="text-xs text-gray-400">{new Date().toLocaleString()}</span>
               </div>
             )}
