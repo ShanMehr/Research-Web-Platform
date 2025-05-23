@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Chat } from "@/types/Chat"
 
+
 export default function ChatBot() {
   const dummyChatList: Chat[] = [
     {
@@ -30,9 +31,52 @@ export default function ChatBot() {
     },
   ]
   const [messages, setMessages] = React.useState<Chat[]>(dummyChatList);
+  const [chatOutput, setChatOutput] = React.useState<string>("");
+  const [prompt, setPrompt] = React.useState<string>("");
+
+  async function chat() {
+    console.log("Chat function called", prompt);
+    if (prompt.trim() === "") {
+      return;
+    } 
+    if (chatOutput.trim() !== "") {
+      setMessages((prev) => [...prev, { id: Math.random().toString(), message: chatOutput, user: "Robot", createdAt: new Date() }]);
+      setChatOutput("");
+    }
+    setPrompt("");
+    let userPrompt = prompt;
+
+    const response = await fetch("http://192.168.0.229:8000/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: userPrompt,
+      }),
+    });
+    if(!response.body) {
+      console.error("No response body");
+      return;
+    }
+
+    console.log("Response: ", response);
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      const chunk = decoder.decode(value, { stream: true });
+      // chat_output += chunk;
+      setChatOutput((prev) => prev + chunk);
+    }
+  }
   
   return (
-    <Card className="w-[500px] flex flex-col gap-4 items-center">
+    <Card className="flex flex-col gap-4 items-center">
       <CardContent>
         <div className="grid gap-4">
           <div className="flex flex-col gap-4 items-center">
@@ -51,8 +95,8 @@ export default function ChatBot() {
               )
             )}
           </div>
-          <Textarea placeholder="What would you like to know..." />
-          <Button variant="outline">Send</Button>
+          <Textarea placeholder="What would you like to know..." value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+          <Button onClick={chat} variant="outline">Send</Button>
         </div>
       </CardContent>
     </Card>
