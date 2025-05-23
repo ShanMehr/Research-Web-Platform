@@ -43,18 +43,18 @@ export default function ChatBot() {
       setMessages((prev) => [...prev, { id: Math.random().toString(), message: chatOutput, user: "Robot", createdAt: new Date() }]);
       setChatOutput("");
     }
-    setPrompt("");
-    let userPrompt = prompt;
 
-    const response = await fetch("http://192.168.0.229:8000/chat", {
+
+    const response = await fetch(`http://192.168.0.229:8000/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: userPrompt,
+        text: prompt,
       }),
     });
+    setPrompt("");
     if(!response.body) {
       console.error("No response body");
       return;
@@ -94,13 +94,18 @@ export default function ChatBot() {
                 </div>
               )
             )}
+            {chatOutput && (
+              <div className="w-full flex flex-col items-end mb-2">
+                <Label className="font-semibold">Robot</Label>
+                <div className="rounded p-2 bg-gray-100">{chatOutput}</div>
+                <span className="text-xs text-gray-400">{new Date().toLocaleString()}</span>
+              </div>
+            )}
           </div>
           <Textarea placeholder="What would you like to know..." value={prompt} onChange={(e) => setPrompt(e.target.value)} />
           <Button onClick={chat} variant="outline">Send</Button>
         </div>
       </CardContent>
     </Card>
-
-    
   );
 }
