@@ -81,7 +81,7 @@ export function Sidebar({
             Reset highlights
           </button>
         </div>
-      ) : null}w
+      ) : null}
     </div>
   );
 }

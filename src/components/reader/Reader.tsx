@@ -58,10 +58,10 @@ const PRIMARY_PDF_URL = "https://arxiv.org/pdf/1708.08021";
 const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
 
-export function Reader() {
+export function Reader(paperLink) {
   // const searchParams = new URLSearchParams(document.location.search);
   // const initialUrl = searchParams.get("url") || PRIMARY_PDF_URL;
-  const initialUrl = PRIMARY_PDF_URL;
+  const initialUrl = paperLink.children || PRIMARY_PDF_URL;
   const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
 
   const [url, setUrl] = useState(initialUrl);
@@ -75,7 +75,7 @@ export function Reader() {
 
   const toggleDocument = () => {
     const newUrl =
-      url === PRIMARY_PDF_URL ? SECONDARY_PDF_URL : PRIMARY_PDF_URL;
+      url === paperLink || PRIMARY_PDF_URL ? SECONDARY_PDF_URL : PRIMARY_PDF_URL;
     setUrl(newUrl);
     setHighlights(testHighlights[newUrl] ? [...testHighlights[newUrl]] : []);
   };
