@@ -2,22 +2,30 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import type { SearchResult } from "@/types/SearchResults";
+import { useRouter } from "next/navigation";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const router = useRouter();
+  const handlePaperClick = (paperId: string) => {
+    router.push(`/read/${paperId}`);
+  };
 
-  function handleSearch() {
+  async function handleSearch() {
     console.log("Search term:", searchTerm);
-    const response = fetch("http://192.168.0.229:8000/search", {
+    const response = await fetch("http://192.168.0.229:8000/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        search: searchTerm,
+        query: searchTerm,
       }),
     }); 
+    const data = await response.json();
+    setSearchResults(data);
   }
 
   return (
@@ -35,13 +43,20 @@ export default function Search() {
           if (e.key === "Enter") handleSearch();
         }}
       />
+      {searchResults.length > 0 && (
+        <div className="flex flex-col gap-4">
+          {searchResults.map((result) => (
+            <div key={result.paper_id} className="flex flex-col gap-2">
+              <a onClick={() => handlePaperClick(result.paper_id)} className="text-foreground">
+                {result.paper_id}
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
       <Button type="button" variant="outline" onClick={() => handleSearch()}>
         Search
       </Button>
-
-      <div>
-        <a href="/read/">Read</a>
-      </div>
     </div>
   );
 }
