@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { SearchResult } from "@/types/SearchResults";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +15,9 @@ export default function Search() {
   };
 
   async function handleSearch() {
-    console.log("Search term:", searchTerm);
+    if (!searchTerm.trim()) {
+      return; // Do not search if the input is empty
+    }
     const response = await fetch("http://192.168.0.229:8000/search", {
       method: "POST",
       headers: {
@@ -29,34 +32,42 @@ export default function Search() {
   }
 
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <h1 className="text-2xl font-bold text-foreground">
-        What Would You Like to Know?
-      </h1>
-      <Input
-        type="text"
-        className="w-full rounded-md bg-background px-4 py-2 text-sm font-semibold text-foreground"
-        value={searchTerm}
-        placeholder="Search..."
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") handleSearch();
-        }}
-      />
+    <div>
+      <Card className="flex w-full">
+        <input
+          type="text"
+          className="w-full px-4 py-2 text-sm font-semibold text-foreground"
+          value={searchTerm}
+          placeholder="Search..."
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch();
+          }}
+        />
+
+        <Button
+          className=""
+          type="button"
+          variant="outline"
+          onClick={() => handleSearch()}
+        >
+          Search
+        </Button>
+      </Card>
       {searchResults.length > 0 && (
         <div className="flex flex-col gap-4">
           {searchResults.map((result) => (
-            <div key={result.paper_id} className="flex flex-col gap-2">
-              <a onClick={() => handlePaperClick(result.paper_id)} className="text-foreground">
+            <div key={result.paper_id} className="flex justify-center border gap-2">
+              <a
+                onClick={() => handlePaperClick(result.paper_id)}
+                className="text-foreground"
+              >
                 {result.paper_id}
               </a>
             </div>
           ))}
         </div>
       )}
-      <Button type="button" variant="outline" onClick={() => handleSearch()}>
-        Search
-      </Button>
     </div>
   );
 }

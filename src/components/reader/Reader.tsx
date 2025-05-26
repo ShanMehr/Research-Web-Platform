@@ -105,7 +105,6 @@ export function Reader(paperLink) {
   };
 
   const addHighlight = (highlight: NewHighlight) => {
-    console.log("Saving highlight", highlight);
     setHighlights((prevHighlights) => [
       { ...highlight, id: getNextId() },
       ...prevHighlights,
@@ -117,7 +116,6 @@ export function Reader(paperLink) {
     position: Partial<ScaledPosition>,
     content: Partial<Content>,
   ) => {
-    console.log("Updating highlight", highlightId, position, content);
     setHighlights((prevHighlights) =>
       prevHighlights.map((h) => {
         const {
@@ -148,7 +146,7 @@ export function Reader(paperLink) {
       <div
         style={{
           height: "100vh",
-          width: "75vw",
+          width: "50vw",
           position: "relative",
         }}
       >

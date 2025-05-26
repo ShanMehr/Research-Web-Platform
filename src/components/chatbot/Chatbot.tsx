@@ -35,7 +35,6 @@ export default function ChatBot() {
   const [prompt, setPrompt] = React.useState<string>("");
 
   async function chat() {
-    console.log("Chat function called", prompt);
     if (prompt.trim() === "") {
       return;
     } 
@@ -59,8 +58,6 @@ export default function ChatBot() {
       console.error("No response body");
       return;
     }
-
-    console.log("Response: ", response);
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8");
