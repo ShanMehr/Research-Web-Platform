@@ -20,7 +20,7 @@ import type {
   Content,
   IHighlight,
   NewHighlight,
-  ScaledPosition,
+  ScaledPosition, 
 } from "react-pdf-highlighter";
 
 import { Sidebar } from "./Sidebar";
@@ -29,10 +29,10 @@ import { Spinner } from "./Spinner";
 import "./style/Reader.css";
 
 // bundled styles
-import "react-pdf-highlighter/dist/style.css";
+import "./style/react-pdf-highlighter.css";
 
 import { testHighlights as _testHighlights } from "./test-highlights";
-
+import { Button } from "../ui/button";
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -69,9 +69,40 @@ export function Reader(paperLink) {
     testHighlights[initialUrl] ? [...testHighlights[initialUrl]] : [],
   );
 
+  async function saveHighlights(highlights: Array<IHighlight>) {
+    console.log("Saving highlights:", highlights);
+  }
+   
+  useEffect(() => {
+    const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      localStorage.setItem("highlights", JSON.stringify(highlights));
+      const response = await fetch("http://192.168.0.229:8000/highlights", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          highlights
+        }),
+      })
+      console.log(highlights)
+      return
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [highlights]);
+
   const resetHighlights = () => {
     setHighlights([]);
   };
+
+
+
 
   const toggleDocument = () => {
     const newUrl =
@@ -164,7 +195,7 @@ export function Reader(paperLink) {
                 position,
                 content,
                 hideTipAndSelection,
-                transformSelection,
+                transformSelection
               ) => (
                 <Tip
                   onOpen={transformSelection}
@@ -181,7 +212,7 @@ export function Reader(paperLink) {
                 hideTip,
                 viewportToScaled,
                 screenshot,
-                isScrolledTo,
+                isScrolledTo
               ) => {
                 const isTextHighlight = !highlight.content?.image;
 
@@ -199,7 +230,7 @@ export function Reader(paperLink) {
                       updateHighlight(
                         highlight.id,
                         { boundingRect: viewportToScaled(boundingRect) },
-                        { image: screenshot(boundingRect) },
+                        { image: screenshot(boundingRect) }
                       );
                     }}
                   />
@@ -223,6 +254,9 @@ export function Reader(paperLink) {
           )}
         </PdfLoader>
       </div>
+      <Button onClick={() => saveHighlights(highlights)}>
+        Save Highlights
+      </Button>
     </div>
   );
 }
