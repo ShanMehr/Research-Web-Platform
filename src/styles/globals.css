@@ -189,10 +189,3 @@ textarea {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
 }
-
-textarea::selection {
-  outline: 0;
-  background-color: var(--primary-foreground);
-  color: var(--primary-foreground);
-}
-

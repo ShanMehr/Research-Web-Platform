@@ -7,7 +7,7 @@ export default function Home() {
         What Would You Like to Know?
       </h1>
       <div className="w-1/2">
-      <Search/>
+        <Search/>
       </div>
     </div>
   );

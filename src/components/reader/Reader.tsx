@@ -138,11 +138,11 @@ export function Reader(paperLink) {
 
   return (
     <div className="App" style={{ display: "flex", height: "100vh" }}>
-      <Sidebar
+      {/* <Sidebar
         highlights={highlights}
         resetHighlights={resetHighlights}
         toggleDocument={toggleDocument}
-      />
+      /> */}
       <div
         style={{
           height: "100vh",

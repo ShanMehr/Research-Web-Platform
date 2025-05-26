@@ -8,10 +8,12 @@ export default function ReadPaper({ }) {
   const params = useParams();
   const paperLink = `https://arxiv.org/pdf/${params.paper}`;
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <Search />
-      <div className="flex justify-center">
-        <Reader className="width-1/2">{paperLink}</Reader>
+    <div className="flex flex-col justify-center items-center w-full gap-4">
+      <div className="w-2/3 h-1/5">
+        <Search />
+      </div>
+      <div className="flex">
+        <Reader >{paperLink}</Reader>
         <Chatbot />
       </div>
     </div>

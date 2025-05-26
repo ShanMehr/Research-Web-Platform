@@ -6,6 +6,7 @@ import type { SearchResult } from "@/types/SearchResults";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,17 +34,17 @@ export default function Search() {
   }
 
   return (
-    <div>
-      <Card className="flex w-full">
-        <Textarea
-          className="w-full px-4 text-sm font-semibold text-foreground h-10 border-0 border-transparent"
+    <div className="h-1/6">
+      <Card>
+        <textarea
+          className="px-4 text-sm font-semibold text-foreground border-0 border-transparent"
           value={searchTerm}
           placeholder="Search..."
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSearch();
           }}
-        ></Textarea>
+        />
         <div className="flex pr-2 justify-end">
           <Button
             className=""
