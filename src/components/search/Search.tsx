@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Settings2, SendHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { SearchResult } from "@/types/SearchResults";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,30 +35,30 @@ export default function Search() {
   return (
     <div>
       <Card className="flex w-full">
-        <input
-          type="text"
-          className="w-full px-4 py-2 text-sm font-semibold text-foreground"
+        <Textarea
+          className="w-full px-4 text-sm font-semibold text-foreground h-10 border-0 border-transparent"
           value={searchTerm}
           placeholder="Search..."
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSearch();
           }}
-        />
-
-        <Button
-          className=""
-          type="button"
-          variant="outline"
-          onClick={() => handleSearch()}
-        >
-          Search
-        </Button>
+        ></Textarea>
+        <div className="flex pr-2 justify-end">
+          <Button
+            className=""
+            type="button"
+            variant="outline"
+            onClick={() => handleSearch()}
+          >
+            <SendHorizontal />
+          </Button>
+        </div>
       </Card>
       {searchResults.length > 0 && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
           {searchResults.map((result) => (
-            <div key={result.paper_id} className="flex justify-center border gap-2">
+            <div key={result.paper_id} className="flex justify-center border">
               <a
                 onClick={() => handlePaperClick(result.paper_id)}
                 className="text-foreground"
@@ -71,3 +72,4 @@ export default function Search() {
     </div>
   );
 }
+
