@@ -10,6 +10,7 @@
     "pull:secrets": "infisical export --path=\"/web-app\" --env=dev > .env"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.20.0",
     "@next/env": "^15.1.8",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
