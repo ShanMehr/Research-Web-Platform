@@ -33,6 +33,8 @@ import "./style/react-pdf-highlighter.css";
 
 import { testHighlights as _testHighlights } from "./test-highlights";
 import { Button } from "../ui/button";
+import { processAnnotation } from "@/lib/annotation";
+import { StoredHighlight } from "@/types/Highlight";
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -71,21 +73,23 @@ export function Reader(paperLink) {
 
   async function saveHighlights(highlights: Array<IHighlight>) {
     console.log("Saving highlights:", highlights);
+    const response = await fetch("http://192.168.0.229:8000/highlights", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // highlights: processedAnnotations,
+        highlights: highlights,
+        paperId: "paper_id", // Replace with actual paper ID
+        userId: "user_id", // Replace with actual user ID
+      }),
+    });
+    console.log(response);
   }
    
   useEffect(() => {
     const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      localStorage.setItem("highlights", JSON.stringify(highlights));
-      const response = await fetch("http://192.168.0.229:8000/highlights", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          highlights
-        }),
-      })
       console.log(highlights)
       return
     };
