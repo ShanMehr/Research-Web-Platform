@@ -79,8 +79,8 @@ export function Reader(paperLink) {
       body: JSON.stringify({
         // highlights: processedAnnotations,
         highlights: highlights,
-        paperId: "paper_id", // Replace with actual paper ID
-        userId: "user_id", // Replace with actual user ID
+        paper_id: "paper_id", // Replace with actual paper ID
+        user_id: "user_id", // Replace with actual user ID
       }),
     });
     console.log(response);
