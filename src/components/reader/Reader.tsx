@@ -33,8 +33,6 @@ import "./style/react-pdf-highlighter.css";
 
 import { testHighlights as _testHighlights } from "./test-highlights";
 import { Button } from "../ui/button";
-import { processAnnotation } from "@/lib/annotation";
-import { StoredHighlight } from "@/types/Highlight";
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -104,8 +102,6 @@ export function Reader(paperLink) {
   const resetHighlights = () => {
     setHighlights([]);
   };
-
-
 
 
   const toggleDocument = () => {
