@@ -4,7 +4,7 @@ import React, {
   useState, 
   useEffect, 
   useCallback, 
-  useRef 
+  useRef, 
 } from "react";
 
 import {
@@ -63,10 +63,11 @@ export function Reader(paperLink) {
   // const initialUrl = searchParams.get("url") || PRIMARY_PDF_URL;
   const initialUrl = paperLink.children || PRIMARY_PDF_URL;
   const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
-
+  let paper_id = "paper_id"; // Replace with actual paper ID
+  let user_id = "user_id"; // Replace with actual user ID
   const [url, setUrl] = useState(initialUrl);
   const [highlights, setHighlights] = useState<Array<IHighlight>>(
-    testHighlights[initialUrl] ? [...testHighlights[initialUrl]] : [],
+    // testHighlights[initialUrl] ? [...testHighlights[initialUrl]] : [],
   );
 
   async function saveHighlights(highlights: Array<IHighlight>) {
@@ -85,8 +86,58 @@ export function Reader(paperLink) {
     });
     console.log(response);
   }
+
+  async function fetchHighlights() {
+    const response = await fetch(`http://192.168.0.229:8000/highlights/${paper_id}/${user_id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log("Fetched highlights:", data);
+    return data;
+  }
+
+  useEffect(() => {
+    const fetchHighlights = async () => {
+      const response: Array<IHighlight> = await fetchHighlights();
+      setHighlights(response);
+    };
+    fetchHighlights();
+  });
+
    
   useEffect(() => {
+    
+    const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
+      console.log(highlights)
+      return
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [highlights]);
+
+  async function fetchHighlights() {
+    const response = await fetch(`http://192.168.0.229:8000/highlights/${paper_id}/${user_id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    await response.json().then((data) => {
+      console.log("Fetched highlights:", data);
+      setHighlights(data);
+    });
+  }
+
+ 
+  useEffect(() => {
+    
     const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
       console.log(highlights)
       return
