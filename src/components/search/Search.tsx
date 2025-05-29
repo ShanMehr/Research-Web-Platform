@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { SearchResult } from "@/types/SearchResults";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { useUser } from "@clerk/nextjs";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,8 +14,12 @@ export default function Search() {
   const handlePaperClick = (paperId: string) => {
     router.push(`/read/${paperId}`);
   };
+  const { isSignedIn } = useUser();
 
   async function handleSearch() {
+    if(!isSignedIn) {
+      router.push("/sign-up");
+    }
     if (!searchTerm.trim()) {
       return; // Do not search if the input is empty
     }
