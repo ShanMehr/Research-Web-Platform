@@ -1,12 +1,10 @@
 "use client";
 import { useState } from "react";
-import { Settings2, SendHorizontal } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { SearchResult } from "@/types/SearchResults";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
