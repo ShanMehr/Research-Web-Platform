@@ -288,9 +288,9 @@ export function Reader(paperLink) {
           )}
         </PdfLoader>
       </div>
-      <Button onClick={() => saveHighlights(highlights)}>
+      {/* <Button className="" onClick={() => saveHighlights(highlights)}>
         Save Highlights
-      </Button>
+      </Button> */}
     </div>
   );
 }

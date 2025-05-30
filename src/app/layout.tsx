@@ -10,6 +10,9 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import {AppSidebar} from "@/components/sidebar/sidebar";
+import {SiteHeader} from "@/components/sidebar/site-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +40,20 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
+          <SidebarProvider>
+            <AppSidebar />
+            <SiteHeader />
+            {/* {children} */}
+
+          </SidebarProvider>
+        </body>
+      </html>
+    </ClerkProvider>
+  );
+}
+
+
+   /* <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedOut>
               <SignInButton />
               <SignUpButton />
@@ -45,10 +61,4 @@ export default function RootLayout({
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </header>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
-  );
-}
+          </header> */

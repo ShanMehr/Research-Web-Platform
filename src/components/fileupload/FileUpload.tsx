@@ -1,62 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { CloudUpload } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod"; 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
+import { useRef } from "react";
 
-const formUploadSchema = z.object({
-  file: z.string().optional(),
-});
-
-
-export function FileUpload() {
+export function FileUpload(
+  {callback}: { callback?: (files: File[]) => void }
+) {
   const [files, setFiles] = useState<File[]>([]);
+  const fileInput = useRef<HTMLInputElement>(null);
 
-  const form = useForm<z.infer<typeof formUploadSchema>>({
-    resolver: zodResolver(formUploadSchema),
-    defaultValues: {
-      file: "",
-    },
-  });
-
-  async function handleSubmit(data: z.infer<typeof formUploadSchema>) {
-    const file = data.file;
-    if (file) {
-      const fileReader = new FileReader();
-      fileReader.onload = function (e) {
-        const fileContents = e.target?.result;
-        if (fileContents) {
-          const fileArrayBuffer = fileContents.split(",")[1];
-          const fileBuffer = fileArrayBuffer.split(";")[0];
-          const fileBase64 = fileBuffer.split(":")[1];
-          const fileData = atob(fileBase64);
-          const fileObj = new File([fileData], "uploaded.pdf", { type: "application/pdf" });
-          setFiles([...files, fileObj]);
-        }
-      };
-      fileReader.readAsDataURL(file);
+  async function saveFiles(event: React.ChangeEvent<HTMLInputElement>) {
+    const newFiles = event.target.files ? Array.from(event.target.files) : [];
+    const updatedFiles = [...files, ...newFiles];
+    setFiles(updatedFiles);
+    if (callback) {
+      callback(files);
     }
   }
 
+  async function handleSubmit() {
+    fileInput.current?.click();
+  }
+  
   return (
-    <div className="">
-      <Button>
-        <CloudUpload />
-        Upload PDF
-      </Button>
-    </div>
+    <Button className="w-full" onClick={() => handleSubmit()}>
+      <CloudUpload />
+      <input className="hidden" type="file" ref={fileInput} onChange={(e) => saveFiles(e)} />
+    </Button>
   );
-}
+} 
+
