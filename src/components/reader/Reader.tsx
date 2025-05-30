@@ -85,7 +85,6 @@ export function Reader(paperLink) {
         user_id: "user_id", // Replace with actual user ID
       }),
     });
-    console.log(response);
   }
 
   useEffect(() => {
@@ -101,12 +100,11 @@ export function Reader(paperLink) {
         return;
       }
       const fetchedHighlights: Array<IHighlight> = data.highlights || [];
+      console.log(fetchedHighlights)
       setHighlights(fetchedHighlights);
     };
-    if(highlights.length === 0) {
-      fetchHighlights();
-    }
-  }, [user_id, paper_id, highlights]);
+    fetchHighlights();
+  }, []);
    
   useEffect(() => {
     const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
