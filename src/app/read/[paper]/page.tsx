@@ -9,7 +9,7 @@ export default function ReadPaper({ }) {
   const params = useParams();
   const paperLink = `https://arxiv.org/pdf/${params.paper}`;
   return (
-    <div className="flex flex-col justify-center items-center w-full gap-4">
+    <div className="flex flex-col justify-center items-center gap-4">
       <div className="w-2/3 h-1/5">
         <Search />
       </div>
