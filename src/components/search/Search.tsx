@@ -37,7 +37,7 @@ export default function Search() {
   }
 
   return (
-    <div className="h-1/6">
+    <div className="flex flex-col h-1/6">
       <Card>
         <textarea
           className="px-4 text-sm font-semibold text-foreground border-0 border-transparent"
