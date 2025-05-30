@@ -21,7 +21,7 @@ export default function Search() {
       router.push("/sign-up");
     }
     if (!searchTerm.trim()) {
-      return; // Do not search if the input is empty
+      return;
     }
     const response = await fetch("http://192.168.0.229:8000/search", {
       method: "POST",
