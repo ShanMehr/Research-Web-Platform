@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import JotaiAuthContext from "@/components/auth/jotai-auth";
 
 import "@/styles/globals.css";
 import {
@@ -59,7 +60,11 @@ export default function RootLayout({
               <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                 <div className="flex items-center gap-2 px-4"></div>
               </header>
-              <main className="flex flex-col h-full">{children}</main>
+              <main className="flex flex-col h-full">
+                {children}
+
+                <JotaiAuthContext></JotaiAuthContext>
+              </main>
             </SidebarInset>
           </SidebarProvider>
         </body>

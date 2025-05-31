@@ -14,3 +14,12 @@ export const authIsLoadingAtom = atom(
 export const isAuthenticatedAtom = atom(
   (get) => get(isClerkLoadedAtom) && get(isSignedInAtom) === true
 );
+
+export const clearAtom = atom(
+  null,
+  (get, set) => {
+    set(isSignedInAtom, undefined);
+    set(isClerkLoadedAtom, false);
+    set(userAtom, undefined);
+  }
+);
