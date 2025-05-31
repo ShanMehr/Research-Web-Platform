@@ -7,10 +7,9 @@ import {
   SidebarRail,
   SidebarTrigger
 } from "@/components/ui/sidebar"
-
 import { NavUser } from "@/components/nav-menu/nav-user";
  
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const data = {
     user: {
       name: "John Doe",
