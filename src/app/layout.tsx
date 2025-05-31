@@ -62,7 +62,6 @@ export default function RootLayout({
               </header>
               <main className="flex flex-col h-full">
                 {children}
-
                 <JotaiAuthContext></JotaiAuthContext>
               </main>
             </SidebarInset>

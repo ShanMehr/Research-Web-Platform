@@ -17,10 +17,12 @@ export default function JotaiAuthContext() {
       setIsSignedInAtom(isSignedIn);
       setIsClerkLoadedAtom(isLoaded);
       setUserAtom(user);
+      localStorage.setItem("user", JSON.stringify(user));
     } else {
       setIsSignedInAtom(undefined);
       setIsClerkLoadedAtom(false);
       setUserAtom(undefined);
+      localStorage.removeItem("user");
     }
   }, [
     user,
