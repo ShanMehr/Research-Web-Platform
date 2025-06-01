@@ -49,9 +49,11 @@ export default function Documents() {
 
   async function upload(files: File[]) {
     const formData = new FormData();
+    // formData.append("user_id", "1234");
     for (const file of files) {
-      formData.append("file", file);
+      formData.append("documents", file);
     }
+    console.log(formData);
     await fetch("http://192.168.0.229:8000/user-documents", {
       method: "POST",
       body: formData,
