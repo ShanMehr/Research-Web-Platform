@@ -12,14 +12,14 @@ export function FileUpload(
   const fileInput = useRef<HTMLInputElement>(null);
 
   async function saveFiles(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.files);
     const newFiles = event.target.files ? Array.from(event.target.files) : [];
     console.log(newFiles.length);
     const updatedFiles = [...files, ...newFiles];
     setFiles(updatedFiles);
-    if (callback) {
-      console.log(files.length);
-      callback(files);
-    }
+    await callback(updatedFiles);
+    setFiles([]);
+    console.log(files);
   }
 
   async function handleSubmit() {

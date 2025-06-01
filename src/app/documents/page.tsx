@@ -52,8 +52,13 @@ export default function Documents() {
 
 
   async function upload(files: File[]) {
+    if (files.length === 0) {
+      console.log("No files selected");
+      return;
+    }
     const formData = new FormData();
     if(!user?.id) {
+      console.log("No user id");
       return;
     }
     formData.append("user_id", user?.id);
