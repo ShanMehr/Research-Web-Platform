@@ -54,7 +54,8 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <JotaiAuthContext></JotaiAuthContext>
+          {/*  TODO make jotai Auth context parent of this component */}
+          <JotaiAuthContext/>
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>

@@ -29,7 +29,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { userAtom } from "@/stores/auth";
+import { userAtomLocalStorage } from "@/stores/auth";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 
@@ -41,7 +41,7 @@ export function NavUser() {
     imageUrl: "https://images.unsplash.com/photo-1607988795691-3d0147b43231?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
   // TODO: Fetch user data from the server
-  let user = useAtomValue(userAtom) || dummyUser;
+  const user = useAtomValue(userAtomLocalStorage) || dummyUser;
   const { isMobile } = useSidebar();
   return (
     <SidebarMenu>

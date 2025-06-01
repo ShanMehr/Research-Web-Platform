@@ -2,14 +2,22 @@
 
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import {isSignedInAtom, isClerkLoadedAtom, userAtom } from "@/stores/auth";
+import {
+  isSignedInAtom, 
+  isClerkLoadedAtom, 
+  userAtom, 
+  userAtomLocalStorage,
+  clerkUserToUser
+} from "@/stores/auth";
 import { useUser } from "@clerk/nextjs";
+
 export default function JotaiAuthContext() {
   const { user, isSignedIn, isLoaded } = useUser();
 
   const [ , setIsSignedInAtom] = useAtom(isSignedInAtom);
   const [ , setIsClerkLoadedAtom] = useAtom(isClerkLoadedAtom);
   const [ , setUserAtom] = useAtom(userAtom);
+  const [ localUser , setUserAtomLocalStorage] = useAtom(userAtomLocalStorage);
 
   useEffect(() => {
     const clerkLoaded = isSignedIn && isLoaded;
@@ -17,12 +25,13 @@ export default function JotaiAuthContext() {
       setIsSignedInAtom(isSignedIn);
       setIsClerkLoadedAtom(isLoaded);
       setUserAtom(user);
-      localStorage.setItem("user", JSON.stringify(user));
+      if (!localUser) {
+        setUserAtomLocalStorage(clerkUserToUser(user));
+      }
     } else {
       setIsSignedInAtom(undefined);
       setIsClerkLoadedAtom(false);
       setUserAtom(undefined);
-      localStorage.removeItem("user");
     }
   }, [
     user,
@@ -31,6 +40,8 @@ export default function JotaiAuthContext() {
     setIsSignedInAtom,
     setIsClerkLoadedAtom,
     setUserAtom,
+    setUserAtomLocalStorage,
+    localUser,
   ]);
 
   return (

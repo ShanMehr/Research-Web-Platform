@@ -39,7 +39,7 @@ export default function Documents() {
 
   const [documents, setDocuments] = useState<Document[]>(dummyDocuments || []);
   useEffect(() => {
-    fetch("http://192.168.0.229:8000/docs")
+    fetch("http://192.168.0.229:8000/user-documents")
       .then((res) => res.json())
       .then((data) => {
         setDocuments(data);
@@ -47,18 +47,19 @@ export default function Documents() {
   }, []);
 
 
-  async function handleDocumentClick(paperId: string) {
-    // const response = await fetch("http://192.168.0.229:8000/document", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     document_id: documentId,
-    //   }),
-    // }); 
-    // const data = await response.json();
-    // console.log(data);
+  async function upload(files: File[]) {
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("file", file);
+    }
+    await fetch("http://192.168.0.229:8000/user-documents", {
+      method: "POST",
+      body: formData,
+    });
+  }
+
+  function handleDocumentClick(paperId: string) {
+    console.log(paperId);
   }
 
   return (
@@ -67,7 +68,7 @@ export default function Documents() {
         <Search />
       </div>
       <div className="w-1/10 ">
-        <FileUpload />
+        <FileUpload callback={upload} />
       </div>
       <div className="flex">
         {documents.length > 0 && (
