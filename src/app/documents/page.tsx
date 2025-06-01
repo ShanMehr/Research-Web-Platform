@@ -55,7 +55,7 @@ export default function Documents() {
     }
     console.log(files.length)
     console.log(formData);
-    await fetch("http://192.168.0.229:8000/upload-documents", {
+    await fetch(`${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/user-documents`, {
       method: "POST",
       body: formData,
     });

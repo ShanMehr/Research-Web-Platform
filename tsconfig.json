@@ -24,7 +24,6 @@
       "@components/*": ["./src/components/*"],
       "@types/*": ["./src/types/*"],
       "@data/*": ["./src/data/*"],
-      "@stores/*": ["./src/stores/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/chatbot/ChatPanel.tsx"],
