@@ -3,6 +3,8 @@
 import { use, useState, useEffect } from "react";
 import Search from "@/components/search/Search";
 import { FileUpload } from "@/components/fileupload/FileUpload";
+import { useAtom } from "jotai";
+import { userAtomLocalStorage } from "@/stores/auth";
 
 export default function Documents() {
   type Document = {
@@ -12,6 +14,8 @@ export default function Documents() {
     authors: string;
     url: string;
   };
+
+  const [user, setUser] = useAtom(userAtomLocalStorage);
 
   const dummyDocuments: Document[] = [
     {
@@ -49,7 +53,10 @@ export default function Documents() {
 
   async function upload(files: File[]) {
     const formData = new FormData();
-    formData.append("user_id", "1234");
+    if(!user?.id) {
+      return;
+    }
+    formData.append("user_id", user?.id);
     for (const file of files) {
       formData.append("documents", file);
     }
