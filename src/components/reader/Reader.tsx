@@ -73,7 +73,9 @@ export function Reader(paperLink) {
 
   async function saveHighlights(highlights: Array<IHighlight>) {
     console.log("Saving highlights:", highlights);
-    const response = await fetch("http://192.168.0.229:8000/highlights", {
+    
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,12 +91,15 @@ export function Reader(paperLink) {
 
   useEffect(() => {
     const fetchHighlights = async () => {
-      const response = await fetch(`http://192.168.0.229:8000/highlights/${paper_id}/${user_id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights/${paper_id}/${user_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
       if (!data) {
         return;

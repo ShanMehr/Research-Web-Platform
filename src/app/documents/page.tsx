@@ -39,7 +39,7 @@ export default function Documents() {
 
   const [documents, setDocuments] = useState<Document[]>(dummyDocuments || []);
   useEffect(() => {
-    fetch("http://192.168.0.229:8000/user-documents")
+    fetch(`${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/user-documents`)
       .then((res) => res.json())
       .then((data) => {
         setDocuments(data);

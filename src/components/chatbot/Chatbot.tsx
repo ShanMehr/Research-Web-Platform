@@ -44,15 +44,18 @@ export default function ChatBot() {
     }
 
 
-    const response = await fetch(`http://192.168.0.229:8000/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: prompt,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/chat`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: prompt,
+        }),
+      }
+    );
     setPrompt("");
     if(!response.body) {
       console.error("No response body");

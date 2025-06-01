@@ -23,15 +23,18 @@ export default function Search() {
     if (!searchTerm.trim()) {
       return;
     }
-    const response = await fetch("http://192.168.0.229:8000/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: searchTerm,
-      }),
-    }); 
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/search`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: searchTerm,
+        }),
+      }
+    ); 
     const data = await response.json();
     setSearchResults(data);
   }
