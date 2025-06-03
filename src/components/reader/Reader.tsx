@@ -142,7 +142,6 @@ export function Reader(paperLink) {
     setHighlights([]);
   };
 
-
   const toggleDocument = () => {
     const newUrl =
       url === paperLink || PRIMARY_PDF_URL ? SECONDARY_PDF_URL : PRIMARY_PDF_URL;

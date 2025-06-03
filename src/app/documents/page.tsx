@@ -5,51 +5,43 @@ import Search from "@/components/search/Search";
 import { FileUpload } from "@/components/fileupload/FileUpload";
 import { useAtom } from "jotai";
 import { userAtomLocalStorage } from "@/stores/auth";
+import { DocumentMetadata } from "@/types/Document";
+
 
 export default function Documents() {
-  type Document = {
-    paper_id: string;
-    title: string;
-    abstract: string;
-    authors: string;
-    url: string;
-  };
-
   const [user, setUser] = useAtom(userAtomLocalStorage);
 
-  const dummyDocuments: Document[] = [
+  const dummyDocuments: DocumentMetadata[] = [
     {
       paper_id: "1234",
-      title: "Title 1",
-      abstract: "Abstract 1",
-      authors: "Author 1",
-      url: "https://arxiv.org/pdf/1234.pdf",
+      owner_id: "1234",
+      group_id: "1234",
+      url: "https://example.com/1234",
+      file_name: "example.pdf",
+      created_at: "2023-03-01T00:00:00.000Z",
     },
     {
       paper_id: "5678",
-      title: "Title 2",
-      abstract: "Abstract 2",
-      authors: "Author 2",
-      url: "https://arxiv.org/pdf/5678.pdf",
-    },
-    {
-      paper_id: "9012",
-      title: "Title 3",
-      abstract: "Abstract 3",
-      authors: "Author 3",
-      url: "https://arxiv.org/pdf/9012.pdf",
+      owner_id: "5678",
+      group_id: "5678",
+      url: "https://example.com/5678",
+      file_name: "example.pdf",
+      created_at: "2023-03-02T00:00:00.000Z",
     },
   ];
 
-  const [documents, setDocuments] = useState<Document[]>(dummyDocuments || []);
+  const [documents, setDocuments] = useState<DocumentMetadata[]>(dummyDocuments || []);
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/user-documents`)
+    console.log(user?.id)
+    const fetchDocumentsBaseUrl= new URL(process.env.NEXT_PUBLIC_INFERENCE_SERVER_API + "/user-documents/")
+    fetchDocumentsBaseUrl.searchParams.append("owner_id", user?.id);
+    fetchDocumentsBaseUrl.searchParams.append("group_id", "public");
+    fetch(fetchDocumentsBaseUrl.toString())
       .then((res) => res.json())
       .then((data) => {
         setDocuments(data);
       });
   }, []);
-
 
   async function upload(files: File[]) {
     if (files.length === 0) {
@@ -97,7 +89,7 @@ export default function Documents() {
                   onClick={() => handleDocumentClick(document.paper_id)}
                   className="text-foreground"
                 >
-                  {document.paper_id}
+                  {document.file_name}
                 </a>
               </div>
             ))}
