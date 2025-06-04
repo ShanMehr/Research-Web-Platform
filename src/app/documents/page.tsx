@@ -6,10 +6,18 @@ import { FileUpload } from "@/components/fileupload/FileUpload";
 import { useAtom } from "jotai";
 import { userAtomLocalStorage } from "@/stores/auth";
 import { DocumentMetadata } from "@/types/Document";
+import { useRouter } from "next/navigation";
+import { 
+  Card, 
+  CardContent, 
+  CardFooter,
+  CardHeader
+} from "@/components/ui/card";
 
 
 export default function Documents() {
   const [user, setUser] = useAtom(userAtomLocalStorage);
+  const router = useRouter();
 
   const dummyDocuments: DocumentMetadata[] = [
     {
@@ -30,7 +38,7 @@ export default function Documents() {
     },
   ];
 
-  const [documents, setDocuments] = useState<DocumentMetadata[]>(dummyDocuments ||[]);
+
   useEffect(() => {
     console.log(user?.id)
     const fetchDocumentsBaseUrl= new URL(process.env.NEXT_PUBLIC_INFERENCE_SERVER_API + "/user-documents/")
@@ -42,6 +50,10 @@ export default function Documents() {
         setDocuments(data);
       });
   }, []);
+
+  const [documents, setDocuments] = useState<DocumentMetadata[]>(
+  []
+  );
 
 
   async function upload(files: File[]) {
@@ -67,7 +79,7 @@ export default function Documents() {
   }
 
   function handleDocumentClick(paperId: string) {
-    console.log(paperId);
+    router.push(`/read/${paperId}`);
   }
 
   return (
@@ -78,20 +90,30 @@ export default function Documents() {
       <div className="w-1/10 ">
         <FileUpload callback={upload} />
       </div>
-      <div className="flex">
+      <h1>My Documents</h1>
+      <div className="flex bg-gray-100 w-2/3 h-2/3 justify-center items-center">
         {documents.length > 0 && (
-          <div className="flex flex-col big-red-500">
+          <div className="flex gap-4 ">
             {documents.map((document) => (
               <div
                 key={document.paper_id}
                 className="flex justify-center border"
               >
-                <a
-                  onClick={() => handleDocumentClick(document.paper_id)}
-                  className="text-foreground"
-                >
-                  {document.file_name}
-                </a>
+                <Card>
+                  <CardHeader>
+                    <a
+                      onClick={() => handleDocumentClick(document.paper_id)}
+                      className="text-foreground"
+                    >
+                      {document.file_name}
+                    </a>
+                  </CardHeader>
+                  <CardFooter>
+                    <div className="flex justify-center">
+                      Created At: {document.created_at}
+                    </div>
+                  </CardFooter>
+                </Card>
               </div>
             ))}
           </div>
