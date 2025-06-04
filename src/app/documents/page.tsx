@@ -30,7 +30,7 @@ export default function Documents() {
     },
   ];
 
-  const [documents, setDocuments] = useState<DocumentMetadata[]>(dummyDocuments || []);
+  const [documents, setDocuments] = useState<DocumentMetadata[]>(dummyDocuments ||[]);
   useEffect(() => {
     console.log(user?.id)
     const fetchDocumentsBaseUrl= new URL(process.env.NEXT_PUBLIC_INFERENCE_SERVER_API + "/user-documents/")
@@ -42,6 +42,7 @@ export default function Documents() {
         setDocuments(data);
       });
   }, []);
+
 
   async function upload(files: File[]) {
     if (files.length === 0) {
