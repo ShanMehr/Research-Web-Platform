@@ -81,36 +81,22 @@ export async function uploadFileToBackblaze(
 }
 
 export async function getDocument(
-  ownerId: string,
-  fileName: string,
+  fileUrl: string,
   bucketName: string,
   authorizationToken: string
 ): Promise<any> {
   if(!authorizationToken) {
     return null;
   }
-  const fileDownloadUrl = `https://api004.backblazeb2.com/b2api/v4/b2_download_file_by_name/${bucketName}/${fileName}/`;
-  const response = await fetch(
-    fileDownloadUrl,
-    {
-      method: "GET",
-      headers: {
-        Authorization: authorizationToken,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  return fetch(
-    "https://api004.backblazeb2.com/file/research-papers-docs/NIPS-2017-attention-is-all-you-need-Paper.pdf",
-    {
-      method: "GET",
-      headers: {
-        Authorization: authorizationToken,
-        "Content-Type": "application/json",
-      },
-    }
-  )
+  console.log("File URL",fileUrl)
+  const fileDownloadUrl = `https://api004.backblazeb2.com/file/${bucketName}/${fileUrl}/`;
+  return fetch(fileDownloadUrl, {
+    method: "GET",
+    headers: {
+      Authorization: authorizationToken,
+      "Content-Type": "application/pdf",
+    },
+  })
     .then((response) => response.blob())
     .catch((error) => console.error(error));
 }

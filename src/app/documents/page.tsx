@@ -9,7 +9,6 @@ import { DocumentMetadata } from "@/types/Document";
 import { useRouter } from "next/navigation";
 import { 
   Card, 
-  CardContent, 
   CardFooter,
   CardHeader
 } from "@/components/ui/card";
@@ -38,12 +37,10 @@ export default function Documents() {
     },
   ];
 
-
   useEffect(() => {
     console.log(user?.id)
-    const fetchDocumentsBaseUrl= new URL(process.env.NEXT_PUBLIC_INFERENCE_SERVER_API + "/user-documents/")
+    const fetchDocumentsBaseUrl= new URL(process.env.NEXT_PUBLIC_INFERENCE_SERVER_API + "/user/documents/")
     fetchDocumentsBaseUrl.searchParams.append("owner_id", user?.id);
-    fetchDocumentsBaseUrl.searchParams.append("group_id", "public");
     fetch(fetchDocumentsBaseUrl.toString())
       .then((res) => res.json())
       .then((data) => {
@@ -51,9 +48,10 @@ export default function Documents() {
       });
   }, []);
 
-  const [documents, setDocuments] = useState<DocumentMetadata[]>(
-  []
-  );
+  const [
+    documents, 
+    setDocuments
+  ] = useState<DocumentMetadata[]>([]);
 
 
   async function upload(files: File[]) {
@@ -72,14 +70,15 @@ export default function Documents() {
     }
     console.log(files.length)
     console.log(formData);
-    await fetch(`${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/user-documents`, {
+    await fetch(`${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/user/documents`, {
       method: "POST",
       body: formData,
     });
   }
 
   function handleDocumentClick(paperId: string) {
-    router.push(`/read/${paperId}`);
+    const paperPath = `/read/${paperId}`;
+    router.push(paperPath);
   }
 
   return (

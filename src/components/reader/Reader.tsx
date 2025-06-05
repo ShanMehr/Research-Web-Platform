@@ -8,6 +8,9 @@ import React, {
   use, 
 } from "react";
 
+import { useAtom } from "jotai";
+import { userAtomLocalStorage } from "@/stores/auth";
+
 import {
   AreaHighlight,
   Highlight,
@@ -34,6 +37,7 @@ import "./style/react-pdf-highlighter.css";
 
 import { testHighlights as _testHighlights } from "./test-highlights";
 import { Button } from "../ui/button";
+import { DocumentMetadata } from "@/types/Document";
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -58,11 +62,10 @@ const HighlightPopup = ({
 const PRIMARY_PDF_URL = "https://arxiv.org/pdf/1708.08021";
 const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
-
 export function Reader(paperLink) {
   // const searchParams = new URLSearchParams(document.location.search);
-  // const initialUrl = searchParams.get("url") || PRIMARY_PDF_URL;
-  const initialUrl = paperLink.children || PRIMARY_PDF_URL;
+  const initialUrl = PRIMARY_PDF_URL;
+  const [user, setUser] = useAtom(userAtomLocalStorage);
   const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
   const paper_id = "paper_id"; // Replace with actual paper ID
   const user_id = "user_id"; // Replace with actual user ID
@@ -72,8 +75,6 @@ export function Reader(paperLink) {
   );
 
   async function saveHighlights(highlights: Array<IHighlight>) {
-    console.log("Saving highlights:", highlights);
-    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights`, {
       method: "POST",
@@ -105,11 +106,32 @@ export function Reader(paperLink) {
         return;
       }
       const fetchedHighlights: Array<IHighlight> = data.highlights || [];
-      console.log(fetchedHighlights)
       setHighlights(fetchedHighlights);
     };
-    fetchHighlights();
-  }, []);
+    const fetchUrl = async (paperUrlParam: string) => {
+      if (!paperUrlParam && typeof paperUrlParam !== "string") {
+        return;
+      }
+      const metadataUrl = new URL(
+        `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/document`
+      );
+      metadataUrl.searchParams.append("paper_id", paperUrlParam);
+      const response = await fetch(metadataUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data: DocumentMetadata = await response.json();
+      if (!data.url) {
+        return paperUrlParam;
+      }
+      const pdfEndpoint = `/api/documents/?path=${data.url}`;
+      setUrl(pdfEndpoint);
+    };
+    fetchUrl(paperLink.children);
+    // fetchHighlights();
+  });
    
   useEffect(() => {
     const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
@@ -123,20 +145,7 @@ export function Reader(paperLink) {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [highlights]);
- 
-  useEffect(() => {
-    
-    const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
-      console.log(highlights)
-      return
-    };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [highlights]);
 
   const resetHighlights = () => {
     setHighlights([]);
