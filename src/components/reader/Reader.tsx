@@ -59,7 +59,8 @@ const HighlightPopup = ({
     </div>
   ) : null;
 
-const PRIMARY_PDF_URL = "https://arxiv.org/pdf/1708.08021";
+const PRIMARY_PDF_URL =
+  "http://localhost:8000/document?paper_id=b32314f4-b5f5-447d-8f36-4c6b702102a4";
 const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
 export function Reader(paperLink) {
@@ -67,8 +68,6 @@ export function Reader(paperLink) {
   const initialUrl = PRIMARY_PDF_URL;
   const [user, setUser] = useAtom(userAtomLocalStorage);
   const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
-  const paper_id = "paper_id"; // Replace with actual paper ID
-  const user_id = "user_id"; // Replace with actual user ID
   const [url, setUrl] = useState(initialUrl);
   const [highlights, setHighlights] = useState<Array<IHighlight>>(
     []
@@ -91,9 +90,10 @@ export function Reader(paperLink) {
   }
 
   useEffect(() => {
+    const paper_id = paperLink.children;
     const fetchHighlights = async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights/${paper_id}/${user_id}`,
+        `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights/${paper_id}/${user?.id}`,
         {
           method: "GET",
           headers: {
@@ -129,7 +129,7 @@ export function Reader(paperLink) {
       const pdfEndpoint = `/api/documents/?path=${data.url}`;
       setUrl(pdfEndpoint);
     };
-    fetchUrl(paperLink.children);
+    fetchUrl(paper_id);
     // fetchHighlights();
   });
    
