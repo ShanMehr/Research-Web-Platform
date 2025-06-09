@@ -75,7 +75,7 @@ export function Reader(paperLink) {
 
   async function saveHighlights(highlights: Array<IHighlight>) {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights`, {
+      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/annotations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export function Reader(paperLink) {
     const paper_id = paperLink.children;
     const fetchHighlights = async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/highlights/${paper_id}/${user?.id}`,
+        `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/annotations/${paper_id}/${user?.id}`,
         {
           method: "GET",
           headers: {
