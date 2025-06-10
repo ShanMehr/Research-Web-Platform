@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SendHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { SearchResult } from "@/types/SearchResults";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 
@@ -17,26 +17,31 @@ export default function Search() {
   const { isSignedIn } = useUser();
 
   async function handleSearch() {
-    if(!isSignedIn) {
+    if (!isSignedIn) {
       router.push("/sign-up");
     }
     if (!searchTerm.trim()) {
       return;
+    } else {
+      const searchParams = new URLSearchParams();
+      searchParams.append("query", searchTerm);
+      const redirectUrl = `/search?${searchParams.toString()}`;
+      redirect(redirectUrl);
     }
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/search`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: searchTerm,
-        }),
-      }
-    ); 
-    const data = await response.json();
-    setSearchResults(data);
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/search`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       query: searchTerm,
+    //     }),
+    //   }
+    // );
+    // const data = await response.json();
+    // setSearchResults(data);
   }
 
   return (
@@ -79,4 +84,3 @@ export default function Search() {
     </div>
   );
 }
-

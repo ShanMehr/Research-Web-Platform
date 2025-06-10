@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-
 const data = {
   user: {
     name: "shadcn",
@@ -191,7 +190,10 @@ export async function AppSidebar({
         <NavMain items={data.navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
-      <SidebarFooter>{/* <NavUser /> */}</SidebarFooter>
+
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

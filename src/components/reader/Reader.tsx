@@ -1,12 +1,6 @@
 "use client";
 
-import React, { 
-  useState, 
-  useEffect, 
-  useCallback, 
-  useRef,
-  use, 
-} from "react";
+import React, { useState, useEffect, useCallback, useRef, use } from "react";
 
 import { useAtom } from "jotai";
 import { userAtomLocalStorage } from "@/stores/auth";
@@ -24,7 +18,7 @@ import type {
   Content,
   IHighlight,
   NewHighlight,
-  ScaledPosition, 
+  ScaledPosition,
 } from "react-pdf-highlighter";
 
 import { Sidebar } from "./Sidebar";
@@ -69,24 +63,24 @@ export function Reader(paperLink) {
   const [user, setUser] = useAtom(userAtomLocalStorage);
   const testHighlights: Record<string, Array<IHighlight>> = _testHighlights;
   const [url, setUrl] = useState(initialUrl);
-  const [highlights, setHighlights] = useState<Array<IHighlight>>(
-    []
-  );
+  const [highlights, setHighlights] = useState<Array<IHighlight>>([]);
 
   async function saveHighlights(highlights: Array<IHighlight>) {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/annotations`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // highlights: processedAnnotations,
-        highlights: highlights,
-        paper_id: "paper_id", // Replace with actual paper ID
-        user_id: "user_id", // Replace with actual user ID
-      }),
-    });
+      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/annotations`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          // highlights: processedAnnotations,
+          highlights: highlights,
+          paper_id: "paper_id", // Replace with actual paper ID
+          user_id: "user_id", // Replace with actual user ID
+        }),
+      }
+    );
   }
 
   useEffect(() => {
@@ -129,14 +123,18 @@ export function Reader(paperLink) {
       const pdfEndpoint = `/api/documents/?path=${data.url}`;
       setUrl(pdfEndpoint);
     };
-    fetchUrl(paper_id);
+    if (paper_id.length > 9) {
+      fetchUrl(paper_id);
+    } else {
+      setUrl(`https://arxiv.org/pdf/${paper_id}`);
+    }
     // fetchHighlights();
   });
-   
+
   useEffect(() => {
-    const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
-      console.log(highlights)
-      return
+    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+      console.log(highlights);
+      return;
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -146,14 +144,15 @@ export function Reader(paperLink) {
     };
   }, [highlights]);
 
-
   const resetHighlights = () => {
     setHighlights([]);
   };
 
   const toggleDocument = () => {
     const newUrl =
-      url === paperLink || PRIMARY_PDF_URL ? SECONDARY_PDF_URL : PRIMARY_PDF_URL;
+      url === paperLink || PRIMARY_PDF_URL
+        ? SECONDARY_PDF_URL
+        : PRIMARY_PDF_URL;
     setUrl(newUrl);
     setHighlights(testHighlights[newUrl] ? [...testHighlights[newUrl]] : []);
   };
@@ -173,7 +172,7 @@ export function Reader(paperLink) {
       window.removeEventListener(
         "hashchange",
         scrollToHighlightFromHash,
-        false,
+        false
       );
     };
   }, [scrollToHighlightFromHash]);
@@ -192,7 +191,7 @@ export function Reader(paperLink) {
   const updateHighlight = (
     highlightId: string,
     position: Partial<ScaledPosition>,
-    content: Partial<Content>,
+    content: Partial<Content>
   ) => {
     setHighlights((prevHighlights) =>
       prevHighlights.map((h) => {
@@ -210,7 +209,7 @@ export function Reader(paperLink) {
               ...rest,
             }
           : h;
-      }),
+      })
     );
   };
 
