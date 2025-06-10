@@ -18,20 +18,7 @@ import { useAtom } from "jotai";
 import { userAtomLocalStorage } from "@/stores/auth";
 
 export default function ChatBot(paperLink) {
-  const dummyChatList: Chat[] = [
-    // {
-    //   id: "1",
-    //   message: "Hello, how can I help you today?",
-    //   user: "Human",
-    //   createdAt: new Date(),
-    // },
-    // {
-    //   id: "2",
-    //   message: "I am looking for information about your services",
-    //   user: "Robot",
-    //   createdAt: new Date(),
-    // },
-  ];
+  const dummyChatList: Chat[] = [];
   const [chatHistory, setChatHistory] = React.useState<Chat[]>(dummyChatList);
   const [chatOutput, setChatOutput] = React.useState<string>("");
   const [prompt, setPrompt] = React.useState<string>("");
@@ -93,7 +80,7 @@ export default function ChatBot(paperLink) {
   }
 
   return (
-    <Card className="flex flex-col gap-4 items-center">
+    <Card className="w-100">
       <CardContent>
         <div className="grid gap-4">
           <div className="flex flex-col gap-4 items-center">
@@ -116,7 +103,8 @@ export default function ChatBot(paperLink) {
                   className="w-full flex flex-col items-end mb-2"
                 >
                   <Label className="font-semibold">{message.user}</Label>
-                  <div className="rounded p-2 bg-gray-100">
+                  <br></br>
+                  <div className="rounded p-3 bg-gray-100">
                     <Markdown>{message.text}</Markdown>
                   </div>
                   <span className="text-xs text-gray-400">
@@ -128,7 +116,9 @@ export default function ChatBot(paperLink) {
             {chatOutput && (
               <div className="w-full flex flex-col items-end mb-2">
                 <Label className="font-semibold">Latent Agent</Label>
-                <div className="rounded p-2 bg-gray-100">
+                <br></br>
+
+                <div className="rounded p-3 bg-gray-100">
                   <Markdown>{chatOutput}</Markdown>
                 </div>
                 <span className="text-xs text-gray-400">

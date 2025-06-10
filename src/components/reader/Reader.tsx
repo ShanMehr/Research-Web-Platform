@@ -119,12 +119,12 @@ export function Reader(paperLink) {
     } else {
       setUrl(`https://arxiv.org/pdf/${paper_id}`);
     }
-    // fetchHighlights();
+    fetchHighlights();
   });
 
   useEffect(() => {
     const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-      console.log(highlights);
+      saveHighlights(highlights);
       return;
     };
 

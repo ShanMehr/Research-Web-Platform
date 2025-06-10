@@ -11,17 +11,17 @@ export default function ReadPaper({}) {
   const params = useParams();
   const paperLink: string = params.paper;
   return (
-    <div className="flex flex-col justify-center items-center gap-4">
+    <div className="flex flex-col w-full justify-center items-center gap-4">
       <div className="w-2/3 h-1/5">
         <Search />
       </div>
-      <div className="flex">
+      <div className="flex w-full justify-center">
         <Reader>{paperLink}</Reader>
-        <Chatbot>{paperLink}</Chatbot>
+        <Chatbot className="w-32">{paperLink}</Chatbot>
       </div>
-      <div className="w-2/3 h-1/5">
+      {/* <div className="w-2/3 h-1/5">
         <FileUpload />
-      </div>
+      </div> */}
     </div>
   );
 }
