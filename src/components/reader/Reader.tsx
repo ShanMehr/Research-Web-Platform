@@ -110,20 +110,11 @@ export function Reader(paperLink) {
         `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/document`
       );
       metadataUrl.searchParams.append("paper_id", paperUrlParam);
-      const response = await fetch(metadataUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data: DocumentMetadata = await response.json();
-      if (!data.url) {
-        return paperUrlParam;
-      }
-      const pdfEndpoint = `/api/documents/?path=${data.url}`;
+      const pdfEndpoint = metadataUrl.toString();
       setUrl(pdfEndpoint);
     };
     if (paper_id.length > 9) {
+      console.log(paper_id);
       fetchUrl(paper_id);
     } else {
       setUrl(`https://arxiv.org/pdf/${paper_id}`);
