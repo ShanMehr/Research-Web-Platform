@@ -14,8 +14,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Chat } from "@/types/Chat";
 import Markdown from "react-markdown";
+import { useAtom } from "jotai";
+import { userAtomLocalStorage } from "@/stores/auth";
 
-export default function ChatBot() {
+export default function ChatBot(paperLink) {
   const dummyChatList: Chat[] = [
     // {
     //   id: "1",
@@ -30,41 +32,49 @@ export default function ChatBot() {
     //   createdAt: new Date(),
     // },
   ];
-  const [messages, setMessages] = React.useState<Chat[]>(dummyChatList);
+  const [chatHistory, setChatHistory] = React.useState<Chat[]>(dummyChatList);
   const [chatOutput, setChatOutput] = React.useState<string>("");
   const [prompt, setPrompt] = React.useState<string>("");
   const [chatId, setChatId] = React.useState<number>(0);
+  const paper_ids = [paperLink.children];
+  const [user, setUser] = useAtom(userAtomLocalStorage);
+
+  interface ChatRequest {
+    input: string;
+    chat_history: Chat[];
+  }
 
   async function chat() {
     if (prompt.trim() === "") {
       return;
     }
-    if (chatOutput.trim() !== "") {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: chatId.toString(),
-          message: chatOutput,
-          user: "Robot",
-          createdAt: new Date(),
-        },
-      ]);
-      setChatOutput("");
-    }
-
+    setChatOutput("");
+    setChatHistory((prev) => [
+      ...prev,
+      {
+        id: chatId.toString(),
+        text: prompt,
+        user: user?.fullName || "User",
+        user_id: user?.id || "user",
+        createdAt: new Date(),
+        associatedContextId: chatId.toString(),
+      },
+    ]);
+    setPrompt("");
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/chat`,
+      `${process.env.NEXT_PUBLIC_INFERENCE_SERVER_API}/chat/papers`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: prompt,
+          input: prompt,
+          paper_ids: paper_ids,
+          // chat_history: chatHistory,
         }),
       }
     );
-    setPrompt("");
     if (!response.body) {
       console.error("No response body");
       return;
@@ -74,12 +84,11 @@ export default function ChatBot() {
     const decoder = new TextDecoder("utf-8");
     while (true) {
       const { done, value } = await reader.read();
+      const chunk = decoder.decode(value, { stream: true });
+      setChatOutput((prev) => prev + chunk);
       if (done) {
         break;
       }
-      const chunk = decoder.decode(value, { stream: true });
-      // chat_output += chunk;
-      setChatOutput((prev) => prev + chunk);
     }
   }
 
@@ -88,14 +97,14 @@ export default function ChatBot() {
       <CardContent>
         <div className="grid gap-4">
           <div className="flex flex-col gap-4 items-center">
-            {messages.map((message) =>
-              message.user === "Robot" ? (
+            {chatHistory.map((message) =>
+              message.user === "Latent Agent" ? (
                 <div
                   key={message.id}
                   className="w-full flex flex-col items-end mb-2"
                 >
                   <div className="rounded p-2">
-                    <Markdown>{message.message}</Markdown>
+                    <Markdown>{message.text}</Markdown>
                   </div>
                   <span className="text-xs text-gray-400">
                     {message.createdAt.toLocaleString()}
@@ -108,7 +117,7 @@ export default function ChatBot() {
                 >
                   <Label className="font-semibold">{message.user}</Label>
                   <div className="rounded p-2 bg-gray-100">
-                    <Markdown>{message.message}</Markdown>
+                    <Markdown>{message.text}</Markdown>
                   </div>
                   <span className="text-xs text-gray-400">
                     {message.createdAt.toLocaleString()}
@@ -118,7 +127,7 @@ export default function ChatBot() {
             )}
             {chatOutput && (
               <div className="w-full flex flex-col items-end mb-2">
-                <Label className="font-semibold">Robot</Label>
+                <Label className="font-semibold">Latent Agent</Label>
                 <div className="rounded p-2 bg-gray-100">
                   <Markdown>{chatOutput}</Markdown>
                 </div>

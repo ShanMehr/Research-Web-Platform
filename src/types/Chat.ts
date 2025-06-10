@@ -1,6 +1,7 @@
 export interface Chat {
   id: string;
-  message: string;
+  text: string;
   user: string;
   createdAt: Date;
+  associatedContextId: string;
 }

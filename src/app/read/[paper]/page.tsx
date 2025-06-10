@@ -17,7 +17,7 @@ export default function ReadPaper({}) {
       </div>
       <div className="flex">
         <Reader>{paperLink}</Reader>
-        <Chatbot />
+        <Chatbot>{paperLink}</Chatbot>
       </div>
       <div className="w-2/3 h-1/5">
         <FileUpload />
