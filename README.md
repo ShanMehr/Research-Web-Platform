@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Research Web Platform
 
-## Getting Started
+Research Acceleration Nexus is a full-stack web platform that helps research teams find papers, read/annotate them, and experiment with implementations in a single workflow. Built and shipped with a small team, it reached 60 users and focused on preserving “research context” across searches, notes, and experiments so literature review doesn’t reset every time you switch tools. This project is a subset of this that I worked on for my Senior Project in Spring 2025 to be able to be accessed by the public.
 
-First, run the development server:
+What it does
+  - Paper discovery + relevance workflows to quickly map an area and collect key sources.​
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  - In-browser PDF reading with highlighting and comments, designed to stay responsive even on very large (10,000+ page) documents.​
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  - Experimentation support: upload paper implementations and reuse them inside the platform (and in external code) via a Python library and cloud storage integration.​
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Technical highlights
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    - Full-stack: FastAPI backend, React frontend, Azure-hosted PostgreSQL.​
 
-## Learn More
+    - ML: fine-tuned a BERT-based embedding model on a curated dataset (~500 “research intent → papers” examples) for improved relevance and retrieval.​
 
-To learn more about Next.js, take a look at the following resources:
+# Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Python, FastAPI, React, PostgreSQL, TensorFlow, Ray, LangGraph, JavaScript.
